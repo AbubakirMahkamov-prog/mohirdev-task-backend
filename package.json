@@ -1,0 +1,15 @@
+{
+  "name": "mohirdev-task",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "watch:build": "tsc --build --watch",
+    "dev": "nodemon dist/server.js",
+    "watch": "npm run watch:build & npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abubakir Mahkamov",
+  "license": "ISC",
+  "description": ""
+}
