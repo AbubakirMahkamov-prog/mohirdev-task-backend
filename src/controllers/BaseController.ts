@@ -20,19 +20,28 @@ class BaseController<T> {
     }
 
     async getAll(req: Request, res: Response): Promise<void> {
-        const modelList = await this.model.find();
+        const modelList = await this.model.find({
+            isDeleted: false
+        });
         res.send(modelList);
     }
 
     async getOne(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
-        const model = await this.model.findById(id);
+        const model = await this.model.findOne({
+            _id: id,
+            isDeleted: false
+        });
         res.send(model);
     }
 
     async deleteOne(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
-        await this.model.deleteOne({ _id: id });
+
+        await this.model.updateOne({ _id: id }, {
+            isDeleted: true
+        });
+        
         res.send({ id: id });
     }
 

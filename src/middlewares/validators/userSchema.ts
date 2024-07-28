@@ -10,3 +10,16 @@ export const createSchema =  validateRequest({
         role: z.enum(['user', 'admin']).optional()
     })
 })
+
+
+export const updateSchema =  validateRequest({
+    params: z.object({
+        id: z.string(),
+    }),
+    body: z.object({
+        fullname: z.string(),
+        email: z.string().email(),
+        password: z.string(),
+        role: z.enum(['user', 'admin']).optional()
+    })
+})

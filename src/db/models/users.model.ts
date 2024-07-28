@@ -28,6 +28,10 @@ const userSchema: Schema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
 });
 
 export const UserModel: Model<IUser> = db.model<IUser>('User', userSchema);

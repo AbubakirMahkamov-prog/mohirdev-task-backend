@@ -7,7 +7,6 @@ class UserController<T> extends BaseController<Model <IUser>> {
     constructor(model: Model<T>) {
         super(model as any);
     }
-
     override async create(req: Request, res: Response): Promise<void> {
         let { fullname, email, password, role } = req.body;
         const passwordHash = await bcrypt.hash(password, 10);
@@ -24,7 +23,24 @@ class UserController<T> extends BaseController<Model <IUser>> {
         } catch (error) {
             res.status(500).send(error)
         }
-       
+    }
+    override async update(req: Request, res: Response): Promise<void> {
+        let { fullname, email, password, role } = req.body;
+        const { id } = req.params;
+        const passwordHash = await bcrypt.hash(password, 10)
+        let data: Partial<IUser> = {
+            fullname: fullname,
+            email: email,
+            password: passwordHash,
+            role: role
+        }
+        try {
+            const model = await this.model.updateOne({ _id: id }, data);
+            res.send(model)
+        } catch (error) {
+            res.status(500).send(error)
+        }
+
     }
 }
 
