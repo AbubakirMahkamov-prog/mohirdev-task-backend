@@ -5,5 +5,6 @@ dotenv.config();
 
 export default {
     PORT: process.env.PORT || 3000,
-    DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || ''
+    DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || '',
+    SECRET_JWT: process.env.SECRET_JWT || ''
 }
