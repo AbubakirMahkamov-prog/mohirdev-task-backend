@@ -4,6 +4,9 @@ import { z } from 'zod';
 
 export const createSchema =  validateRequest({
     body: z.object({
-        name: z.string()
+        fullname: z.string(),
+        email: z.string().email(),
+        password: z.string(),
+        role: z.enum(['user', 'admin']).optional()
     })
 })
