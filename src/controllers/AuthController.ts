@@ -14,6 +14,7 @@ class AuthController<T> {
         let { email, password: pass } = req.body;
         let model = await this.model.findOne({
             email: email,
+            isDeleted: false
         }).lean()
         if (!model) {
             res.status(404).send({
