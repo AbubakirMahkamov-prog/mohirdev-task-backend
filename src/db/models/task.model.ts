@@ -28,5 +28,5 @@ const taskSchema: Schema = new mongoose.Schema({
     }
 });
 
-export const UserModel: Model<ITask> = db.model<ITask>('tasks', taskSchema);
+export const TaskModel: Model<ITask> = db.model<ITask>('tasks', taskSchema);
 

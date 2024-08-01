@@ -30,7 +30,7 @@ export default (...roles: roleType[]) => {
             req.currentUser = user;
             next()
         } catch(err: any) {
-            res.status(500).send(err);
+            res.status(401).send(err);
             return;
         }
     }

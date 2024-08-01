@@ -25,10 +25,15 @@ class TaskController <T> extends BaseController<T> {
     }
     async getMine(req: Request, res: Response): Promise<void> {
         const currentUser = req.currentUser;
-        const modelList = this.model.find({
-            owner_id: currentUser._id,
-        })
-        res.send(modelList)
+        try {
+            const modelList = this.model.find({
+                owner_id: currentUser._id,
+            })
+            res.send(modelList)
+        } catch(err) {
+            console.log(err)
+            res.status(500).send(err)
+        }
     }
 }
 

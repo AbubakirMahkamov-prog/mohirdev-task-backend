@@ -7,7 +7,7 @@ import roleUtils from '../startup/role.utils';
 const router = express.Router();
 const userController = new UserController(UserModel as any);
 
-router.get('/', authMiddleware(), userController.getAll)
+router.get('/', authMiddleware(roleUtils.Admin as any), userController.getAll)
 router.get('/:id', authMiddleware(), userController.getOne)
 router.post('/', authMiddleware(roleUtils.Admin as any),createSchema, userController.create)
 router.delete('/:id', authMiddleware(roleUtils.Admin as any), userController.deleteOne)
