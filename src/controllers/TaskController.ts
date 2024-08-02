@@ -5,6 +5,8 @@ import type { Document, Model, Schema } from 'mongoose';
 class TaskController <T> extends BaseController<T> {
     constructor(model: Model<T>) {
         super(model as any);
+        this.getMine = this.getMine.bind(this);
+
     }
     override async create(req: Request, res: Response): Promise<void> {
         const currentUser = req.currentUser;
@@ -26,9 +28,10 @@ class TaskController <T> extends BaseController<T> {
     async getMine(req: Request, res: Response): Promise<void> {
         const currentUser = req.currentUser;
         try {
-            const modelList = this.model.find({
+            const modelList = await this.model.find({
                 owner_id: currentUser._id,
             })
+
             res.send(modelList)
         } catch(err) {
             console.log(err)
