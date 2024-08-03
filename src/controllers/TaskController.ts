@@ -9,6 +9,7 @@ class TaskController <T> extends BaseController<T> {
         this.getMineCompleted = this.getMineCompleted.bind(this);
         this.setCompleted = this.setCompleted.bind(this);
         this.setNew = this.setNew.bind(this);
+        this.getStatistic = this.getStatistic.bind(this)
 
     }
     override async getOne(req: Request, res: Response): Promise<void> {
@@ -85,6 +86,45 @@ class TaskController <T> extends BaseController<T> {
         const { id } = req.params;  
         const model = await this.changeStatus(id, currentUser._id, 'completed');
         res.send(model)
+    }
+
+    async getStatistic(req: Request, res: Response): Promise<void> {
+        const modelList = await this.model.aggregate([
+            {
+                $lookup: {
+                    from: 'users', // The name of the users collection
+                    localField: 'owner_id',
+                    foreignField: '_id',
+                    as: 'users'
+                }
+            },
+            {
+                $unwind: '$users' // Unwind the user array
+            },
+            {
+                $group: {
+                  _id: '$owner_id',
+                  fullname: { $first: '$users.fullname' }, // Extract the user's full name
+                  newTasksCount: {
+                    $sum: { $cond: [{ $eq: ['$status', 'new'] }, 1, 0] }
+                  },
+                  completedTasksCount: {
+                    $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] }
+                  }
+                }
+              },
+              {
+                $project: {
+                  _id: 0,
+                  owner_id: '$_id',
+                  fullname: 1,
+                  newTasksCount: 1,
+                  completedTasksCount: 1,
+                }
+              }
+        
+        ]);
+        res.send(modelList);
     }
 }
 
