@@ -1,7 +1,7 @@
 import BaseController from "./BaseController";
 import { Request, Response } from 'express';
 import type { Document, Model, Schema } from 'mongoose';
-
+import mongoose from "mongoose";
 class TaskController <T> extends BaseController<T> {
     constructor(model: Model<T>) {
         super(model as any);
@@ -110,19 +110,28 @@ class TaskController <T> extends BaseController<T> {
                   },
                   completedTasksCount: {
                     $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] }
-                  }
+                  },
+                  totalTasksCount: {
+                    $sum: 1 // Counts all tasks regardless of status
+                  }            
                 }
               },
               {
-                $project: {
-                  _id: 0,
-                  owner_id: '$_id',
-                  fullname: 1,
-                  newTasksCount: 1,
-                  completedTasksCount: 1,
+                $addFields: {
+                  completionPercentage: {
+                    $cond: {
+                      if: { $eq: ['$totalTasksCount', 0] }, // Avoid division by zero
+                      then: 0,
+                      else: {
+                        $multiply: [
+                          { $divide: ['$completedTasksCount', '$totalTasksCount'] },
+                          100
+                        ]
+                      }
+                    }
+                  }
                 }
               }
-        
         ]);
         res.send(modelList);
     }

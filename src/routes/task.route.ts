@@ -6,18 +6,14 @@ import authMiddleware from '../middlewares/authMiddleware';
 const router = express.Router();
 
 const taskController = new TaskController(TaskModel as any);
-try {
-    router.post('/', authMiddleware(), taskCreateSchema, taskController.create)
-    router.patch('/:id', authMiddleware(), taskUpdateSchema, taskController.update)
-    router.get('/get-mine-new', authMiddleware(), taskController.getMineNew)
-    router.get('/get-mine-completed', authMiddleware(), taskController.getMineCompleted)
-    router.get('/:id', authMiddleware(), taskController.getOne);
-    router.post('/set-new/:id', authMiddleware(), taskController.setNew);
-    router.post('/set-completed/:id', authMiddleware(), taskController.setCompleted);
-    router.get('/statistics', authMiddleware(), taskController.getStatistic);
-} catch (error) {
-    console.log(error)
-}
 
+router.get('/statistics', taskController.getStatistic);
+router.post('/', authMiddleware(), taskCreateSchema, taskController.create)
+router.patch('/:id', authMiddleware(), taskUpdateSchema, taskController.update)
+router.get('/get-mine-new', authMiddleware(), taskController.getMineNew)
+router.get('/get-mine-completed', authMiddleware(), taskController.getMineCompleted)
+router.get('/:id', authMiddleware(), taskController.getOne);
+router.post('/set-new/:id', authMiddleware(), taskController.setNew);
+router.post('/set-completed/:id', authMiddleware(), taskController.setCompleted);
 
 export default router;

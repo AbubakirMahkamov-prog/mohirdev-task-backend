@@ -12,7 +12,7 @@ export default async function (app: Express) {
     
     app.use(express.json())
     app.use(cors())
+    app.use('/task', TaskRouter)
     app.use('/user', UserRouter);
     app.use('/auth', AuthRouter)
-    app.use('/task', TaskRouter)
 }

@@ -23,7 +23,7 @@ const taskSchema: Schema = new mongoose.Schema({
         default: 'new'
     },
     owner_id: {
-        type: String,
+        type: mongoose.Schema.ObjectId,
         required: true,
         ref: 'users'
     }
