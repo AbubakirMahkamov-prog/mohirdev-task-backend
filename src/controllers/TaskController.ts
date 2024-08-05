@@ -10,6 +10,7 @@ class TaskController <T> extends BaseController<T> {
         this.setCompleted = this.setCompleted.bind(this);
         this.setNew = this.setNew.bind(this);
         this.getStatistic = this.getStatistic.bind(this)
+        this.getByUserId = this.getByUserId.bind(this);
 
     }
     override async getOne(req: Request, res: Response): Promise<void> {
@@ -30,10 +31,9 @@ class TaskController <T> extends BaseController<T> {
         res.send(model);
     }
     override async update(req: Request, res: Response): Promise<void> {
-        const currentUser = req.currentUser;
         const { id } = req.params;
         const { title, content } = req.body;
-        const model = await this.model.updateOne({ _id: id , owner_id: currentUser.id }, { title, content })
+        const model = await this.model.updateOne({ _id: id }, { title, content })
         res.send(model);
     }
     async getMineNew(req: Request, res: Response): Promise<void> {
@@ -65,10 +65,9 @@ class TaskController <T> extends BaseController<T> {
         }
     }
 
-    async changeStatus(_id: string, owner_id: string, status: 'new' | 'completed'): Promise<any> {
+    async changeStatus(_id: string, status: 'new' | 'completed'): Promise<any> {
         const model = await this.model.updateOne({
             _id: _id,
-            owner_id: owner_id,
         }, {
             status: status,
         })
@@ -76,15 +75,13 @@ class TaskController <T> extends BaseController<T> {
     }
 
     async setNew(req: Request, res: Response): Promise<void> {
-        const currentUser = req.currentUser;
         const { id } = req.params;
-        const model = await this.changeStatus(id, currentUser._id, 'new');
+        const model = await this.changeStatus(id, 'new');
         res.send(model)
     }
     async setCompleted(req: Request, res: Response): Promise<void> {
-        const currentUser = req.currentUser;
         const { id } = req.params;  
-        const model = await this.changeStatus(id, currentUser._id, 'completed');
+        const model = await this.changeStatus(id, 'completed');
         res.send(model)
     }
 
@@ -134,6 +131,14 @@ class TaskController <T> extends BaseController<T> {
               }
         ]);
         res.send(modelList);
+    }
+    async getByUserId(req: Request, res: Response): Promise<void> {
+        const { id, status } = req.params;
+        const modelList = await this.model.find({
+            owner_id: id,
+            status: status
+        })
+        res.send(modelList)
     }
 }
 

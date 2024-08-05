@@ -21,6 +21,7 @@ class TaskController extends BaseController_1.default {
         this.setCompleted = this.setCompleted.bind(this);
         this.setNew = this.setNew.bind(this);
         this.getStatistic = this.getStatistic.bind(this);
+        this.getByUserId = this.getByUserId.bind(this);
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,10 +46,9 @@ class TaskController extends BaseController_1.default {
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const currentUser = req.currentUser;
             const { id } = req.params;
             const { title, content } = req.body;
-            const model = yield this.model.updateOne({ _id: id, owner_id: currentUser.id }, { title, content });
+            const model = yield this.model.updateOne({ _id: id }, { title, content });
             res.send(model);
         });
     }
@@ -84,11 +84,10 @@ class TaskController extends BaseController_1.default {
             }
         });
     }
-    changeStatus(_id, owner_id, status) {
+    changeStatus(_id, status) {
         return __awaiter(this, void 0, void 0, function* () {
             const model = yield this.model.updateOne({
                 _id: _id,
-                owner_id: owner_id,
             }, {
                 status: status,
             });
@@ -99,7 +98,7 @@ class TaskController extends BaseController_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const currentUser = req.currentUser;
             const { id } = req.params;
-            const model = yield this.changeStatus(id, currentUser._id, 'new');
+            const model = yield this.changeStatus(id, 'new');
             res.send(model);
         });
     }
@@ -107,7 +106,7 @@ class TaskController extends BaseController_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const currentUser = req.currentUser;
             const { id } = req.params;
-            const model = yield this.changeStatus(id, currentUser._id, 'completed');
+            const model = yield this.changeStatus(id, 'completed');
             res.send(model);
         });
     }
@@ -157,6 +156,16 @@ class TaskController extends BaseController_1.default {
                     }
                 }
             ]);
+            res.send(modelList);
+        });
+    }
+    getByUserId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, status } = req.params;
+            const modelList = yield this.model.find({
+                owner_id: id,
+                status: status
+            });
             res.send(modelList);
         });
     }

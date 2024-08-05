@@ -45,7 +45,7 @@ class AuthController {
             const token = jsonwebtoken_1.default.sign({
                 userId: model._id,
             }, config_1.default.SECRET_JWT, {
-                expiresIn: '1d'
+                expiresIn: '7d'
             });
             res.send(Object.assign(Object.assign({}, model), { token }));
         });

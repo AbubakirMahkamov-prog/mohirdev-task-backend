@@ -36,7 +36,7 @@ class AuthController<T> {
         const token = jwt.sign({
             userId: model._id,
         }, config.SECRET_JWT, {
-            expiresIn: '1d'
+            expiresIn: '7d'
         })
 
         res.send({
