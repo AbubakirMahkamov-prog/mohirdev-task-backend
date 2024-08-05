@@ -19,6 +19,7 @@ class AuthController {
     constructor(model) {
         this.model = model;
         this.login = this.login.bind(this);
+        this.registration = this.registration.bind(this);
     }
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +48,24 @@ class AuthController {
                 expiresIn: '1d'
             });
             res.send(Object.assign(Object.assign({}, model), { token }));
+        });
+    }
+    registration(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { fullname, email, password } = req.body;
+            const passwordHash = yield bcrypt_1.default.hash(password, 10);
+            let data = {
+                fullname: fullname,
+                email: email,
+                password: passwordHash
+            };
+            try {
+                const model = yield this.model.create(data);
+                res.send(model);
+            }
+            catch (error) {
+                res.status(500).send(error);
+            }
         });
     }
 }

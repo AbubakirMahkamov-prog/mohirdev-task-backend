@@ -8,3 +8,10 @@ export const loginSchema =  validateRequest({
     })
 })
 
+export const registrationSchema =  validateRequest({
+    body: z.object({
+        fullname: z.string(),
+        email: z.string().email(),
+        password: z.string()
+    })
+})

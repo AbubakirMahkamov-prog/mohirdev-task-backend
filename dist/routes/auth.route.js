@@ -10,4 +10,5 @@ const authSchema_1 = require("../middlewares/validators/authSchema");
 const router = express_1.default.Router();
 const authController = new AuthController_1.default(users_model_1.UserModel);
 router.post('/login', authSchema_1.loginSchema, authController.login);
+router.post('/registration', authSchema_1.registrationSchema, authController.registration);
 exports.default = router;
